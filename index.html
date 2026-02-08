@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💘</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Rubik+Spray+Paint&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;user-select:none}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background:linear-gradient(135deg,#ff4d6d,#c77dff,#ff758f);
+  background-size:400% 400%;
+  animation:bgShift 10s infinite alternate;
+  font-family:'Pacifico',cursive;
+}
+
+@keyframes bgShift{
+  from{background-position:0% 50%}
+  to{background-position:100% 50%}
+}
+
+.heart{
+  position:absolute;
+  font-size:24px;
+  animation:floatUp linear infinite;
+}
+
+@keyframes floatUp{
+  from{transform:translateY(100vh) scale(.5);opacity:0}
+  to{transform:translateY(-10vh) scale(1.2);opacity:1}
+}
+
+.container{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  z-index:5;
+  padding:20px;
+}
+
+h1{
+  font-family:'Rubik Spray Paint',cursive;
+  font-size:2.8rem;
+  color:white;
+  text-shadow:0 0 25px hotpink,0 0 40px red;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+}
+
+.buttons{
+  margin-top:40px;
+  display:flex;
+  gap:20px;
+}
+
+button{
+  padding:18px 36px;
+  font-size:1.4rem;
+  border:none;
+  border-radius:50px;
+  cursor:pointer;
+}
+
+#yesBtn{
+  background:linear-gradient(45deg,#ff006e,#ffbe0b);
+  color:white;
+  box-shadow:0 0 20px rgba(255,0,100,.7);
+}
+
+#noBtn{
+  background:#222;
+  color:white;
+  position:relative;
+}
+
+#celebration{
+  display:none;
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.35);
+  z-index:10;
+}
+
+.celebrate-text{
+  position:absolute;
+  top:35%;
+  width:100%;
+  text-align:center;
+  font-size:3rem;
+  color:white;
+  font-family:'Rubik Spray Paint',cursive;
+  text-shadow:0 0 30px hotpink;
+}
+
+.gif{
+  position:absolute;
+  width:120px;
+}
+
+#screenshotMsg{
+  position:absolute;
+  bottom:10%;
+  width:100%;
+  text-align:center;
+  font-size:1.5rem;
+  color:white;
+  opacity:0;
+  animation:fadeIn 2s ease forwards;
+  animation-delay:4s;
+  text-shadow:0 0 15px hotpink;
+}
+
+@keyframes fadeIn{to{opacity:1}}
+
+#startOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  color:white;
+  font-size:2rem;
+  font-family:'Rubik Spray Paint',cursive;
+  text-shadow:0 0 20px hotpink;
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="bgMusic" loop src="https://cdn.pixabay.com/audio/2022/03/15/audio_4f9c1b0c91.mp3"></audio>
+<audio id="celebrateMusic" loop src="https://cdn.pixabay.com/audio/2022/10/30/audio_946b92a3c3.mp3"></audio>
+<audio id="heartbeat" src="https://cdn.pixabay.com/audio/2022/03/15/audio_0c2d7c3c8a.mp3"></audio>
+<audio id="kissSound" src="https://cdn.pixabay.com/audio/2022/02/23/audio_7c8c94a8de.mp3"></audio>
+<audio id="nameWhisper" src="https://cdn.pixabay.com/audio/2022/11/16/audio_0fbc0b6e78.mp3"></audio>
+<audio id="whisper" src="https://cdn.pixabay.com/audio/2022/11/16/audio_9a63c0b03a.mp3"></audio>
+
+<div id="startOverlay">Tap to Start 💖</div>
+
+<div class="container" id="question">
+  <h1>PREETI,<br>WILL YOU BE MY VALENTINE?</h1>
+  <div class="buttons">
+    <button id="yesBtn">YES 💖</button>
+    <button id="noBtn">NO 😜</button>
+  </div>
+</div>
+
+<div id="celebration">
+  <div class="celebrate-text">I KNEW YOU LOVE ME 💘🔥</div>
+  <div id="screenshotMsg">Screenshot this moment 💕</div>
+</div>
+
+<script>
+const hearts=["❤️","💖","💘","💝","💕","💞","💓"];
+const bgMusic=document.getElementById("bgMusic");
+const celebrateMusic=document.getElementById("celebrateMusic");
+const heartbeat=document.getElementById("heartbeat");
+bgMusic.volume=.4;
+celebrateMusic.volume=.6;
+heartbeat.volume=.5;
+
+/* Start overlay */
+document.getElementById("startOverlay").onclick=()=>{
+  bgMusic.play();
+  startHeartbeat();
+  document.getElementById("startOverlay").style.display="none";
+};
+
+/* Hearts */
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText=hearts[Math.floor(Math.random()*hearts.length)];
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=3+Math.random()*5+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
+},200);
+
+/* NO button escape */
+const noBtn=document.getElementById("noBtn");
+function moveNo(){
+  noBtn.style.position="absolute";
+  noBtn.style.left=Math.random()*(innerWidth-100)+"px";
+  noBtn.style.top=Math.random()*(innerHeight-100)+"px";
+}
+noBtn.onmouseover=moveNo;
+noBtn.ontouchstart=moveNo;
+
+/* Heartbeat speed-up */
+let speed=2000,interval;
+function startHeartbeat(){
+  interval=setInterval(()=>{
+    heartbeat.currentTime=0;
+    heartbeat.play();
+    if(navigator.vibrate) navigator.vibrate(60);
+    if(speed>900){
+      speed-=80;
+      clearInterval(interval);
+      startHeartbeat();
+    }
+  },speed);
+}
+
+/* YES */
+document.getElementById("yesBtn").onclick=()=>{
+  clearInterval(interval);
+  heartbeat.pause();
+  document.getElementById("kissSound").play();
+  bgMusic.pause();
+  celebrateMusic.play();
+
+  document.getElementById("question").style.display="none";
+  const cel=document.getElementById("celebration");
+  cel.style.display="block";
+
+  const gifs=[
+    "https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif",
+    "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif",
+    "https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif"
+  ];
+
+  for(let i=0;i<10;i++){
+    const g=document.createElement("img");
+    g.src=gifs[Math.floor(Math.random()*gifs.length)];
+    g.className="gif";
+    g.style.left=Math.random()*90+"vw";
+    g.style.top=Math.random()*90+"vh";
+    cel.appendChild(g);
+  }
+
+  setTimeout(()=>document.getElementById("nameWhisper").play(),700);
+  setTimeout(()=>document.getElementById("whisper").play(),1500);
+};
+</script>
+
+</body>
+</html>
